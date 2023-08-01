@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { data } from "./data";
 import * as THREE from "three";
@@ -38,21 +38,40 @@ paths.forEach((path) => {
 
 function Tube({ cur }) {
   const brainRef = useRef();
-  useFrame(({ clock }) => {
+
+  const { viewport } = useThree();
+
+  useFrame(({ clock, mouse }) => {
     brainRef.current.uniforms.time.value = clock.getElapsedTime();
+    brainRef.current.uniforms.mouse.value = new THREE.Vector3(
+        mouse.x * viewport.width / 2,
+        mouse.y * viewport.height / 2,
+        0
+    );
   });
   const BrainMaterial = shaderMaterial(
-    { time: 0, color: new THREE.Color(0.1, 0.3, 0.6) },
+    { time: 0, color: new THREE.Color(0.1, 0.3, 0.6), mouse: new THREE.Vector3() },
     // vertex shader
     /*glsl*/`
       varying vec2 vUv;
       uniform float time;
+      uniform vec3 mouse;
       varying float vProgess;
 
       void main() {
         vUv = uv;
-        vProgess = smoothstep(-1.,1.,sin(vUv.x * time*4.));
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        vProgess = smoothstep(-1.,1.,sin(vUv.x * 8. + time*3.));
+
+        vec3 p = position;
+        float maxDistance = 0.05;
+        float dist = length(mouse - p);
+        if (dist < maxDistance){
+            vec3 direction = normalize(mouse - p);
+            direction*=(1. - dist/maxDistance);
+            p -=direction*0.04;
+        }
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
       }
     `,
     // fragment shader

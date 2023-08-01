@@ -5,7 +5,7 @@ import Tubes from "./brain";
 import { useEffect, useMemo } from "react";
 import { shaderMaterial } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { extend } from '@react-three/fiber'
+import { extend } from '@react-three/fiber';
 import { useRef } from "react";
 
 const paths = data.economics[0].paths;
