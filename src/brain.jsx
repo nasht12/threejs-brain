@@ -12,7 +12,7 @@ const randomLength = (min, max) => Math.random() * (max - min) + min;
 let curves = [];
 for (let i = 0; i < 100; i++) {
   let points = [];
-  const length = randomLength(0.2, 1);
+  const length = randomLength(0.8, 1);
   for (let j = 0; j < 100; j++) {
     points.push(
       new THREE.Vector3().setFromSphericalCoords(
@@ -38,14 +38,22 @@ paths.forEach((path) => {
 
 function Tube({ cur }) {
   const brainRef = useRef();
-
   const { viewport } = useThree();
+
+  const sphereRef = useRef();
+
+  useFrame(({ clock }) => {
+    // Rotate the sphere around the Y-axis on each frame
+    if (sphereRef.current) {
+      sphereRef.current.rotation.y += 0.001;
+    }
+  });
 
   useFrame(({ clock, mouse }) => {
     brainRef.current.uniforms.time.value = clock.getElapsedTime();
     brainRef.current.uniforms.mouse.value = new THREE.Vector3(
-        mouse.x * viewport.width / 2,
-        mouse.y * viewport.height / 2,
+        mouse.x * viewport.width / 4,
+        mouse.y * viewport.height / 4,
         0
     );
   });
@@ -93,7 +101,7 @@ function Tube({ cur }) {
 
   return (
     <>
-      <mesh>
+      <mesh ref={sphereRef}>
         <tubeGeometry args={[cur, 64, 0.001, 3, false]} />
         <brainMaterial ref={brainRef} side={THREE.DoubleSide}
         opacity={0.5}
