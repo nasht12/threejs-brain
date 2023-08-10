@@ -5,6 +5,8 @@ import SphereRender from './sphere-render'
 import PlainSphereRender from './plain-sphere'
 import { Portal } from './components/portal'
 import { useRoute, useLocation } from 'wouter'
+import { Portal2 } from './components/portal2'
+import { ImageSlider3 } from './components/imageslider'
 
 export default function App() {
 
@@ -14,11 +16,12 @@ export default function App() {
   return (
     <>
       {/* <BrainRender /> */}
-      {/* <BrainRender2 /> */}
+      {/* <BrainRender2 />/ */}
       {/* <SphereRender /> */}
       {/* <PlainSphereRender /> */}
-      <Portal />
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+      {/* <Portal2 /> */}
+      <ImageSlider3 />
+      {/* <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
   <a
     style={{
       position: 'absolute',
@@ -35,7 +38,7 @@ export default function App() {
     {params ? "< back" : "double click to enter portal"}
   </a>
 </div>
-{' '}
+{' '} */}
     </>
   )
 }
